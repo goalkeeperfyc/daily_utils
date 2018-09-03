@@ -60,6 +60,9 @@ for line in data_lst:
     line['ID'] = line['channel'] + line['name']
     line['start_datetime'] = datetime.datetime.strptime(line['start'], '%Y-%m-%d %H:%M:%S')
 
+#处理过的列表写入文件
+
+
 #从综艺节目开始
 variety_lst = []
 cate_name = '综艺'
@@ -67,6 +70,7 @@ cate_name = '综艺'
 for line in data_lst:
     if line['category'] == cate_name:
         variety_lst.append(line)
+
 
 #找到所有综艺节目的名字
 ID_lst = []
@@ -84,8 +88,8 @@ for id_name in ID_lst:
     if len(process_lst) == 1:
         for line in process_lst:
             line['ps'] = 1
-            result_lst=copy.deepcopy(process_lst)
-            meta.dic_lst_to_file(result_lst, 'D:/Big_Data/time_shift/test_data/result')
+            result_lst = copy.deepcopy(process_lst)
+            meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/result.csv')
         continue
 
 #判断有无重播
@@ -97,8 +101,8 @@ for id_name in ID_lst:
 #相邻的两个日期差值相近
     if len(date_lst) == len(process_lst):
         line['ps'] = 1
-        result_lst=copy.deepcopy(process_lst)
-        meta.dic_lst_to_file(result_lst, 'D:/Big_Data/time_shift/test_data/result')
+        result_lst = copy.deepcopy(process_lst)
+        meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/result.csv')
         continue
 
     df_process = pd.DataFrame(process_lst)
@@ -154,4 +158,4 @@ for id_name in ID_lst:
         result_lst.append(line)
     for line in first_publish:
         result_lst.append(line)
-    meta.dic_lst_to_file(result_lst, 'D:/Big_Data/time_shift/test_data/result')
+    meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/result.csv')
