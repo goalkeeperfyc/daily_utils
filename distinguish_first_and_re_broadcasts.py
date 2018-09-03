@@ -89,7 +89,7 @@ for id_name in ID_lst:
         for line in process_lst:
             line['ps'] = 1
             result_lst = copy.deepcopy(process_lst)
-            meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/result.csv')
+            meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/'+id_name+'.csv')
         continue
 
 #判断有无重播
@@ -102,7 +102,7 @@ for id_name in ID_lst:
     if len(date_lst) == len(process_lst):
         line['ps'] = 1
         result_lst = copy.deepcopy(process_lst)
-        meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/result.csv')
+        meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/'+id_name+'.csv')
         continue
 
     df_process = pd.DataFrame(process_lst)
@@ -116,6 +116,8 @@ for id_name in ID_lst:
             line['ps1_poss'] = 0
         if line['start_hour'] >= 19 and line['start_hour'] <=22:
             line['ps2'] = 1
+        else:
+            line['ps2'] = 0
 #将两个都是1的放入first_lst
 
     for line in process_lst:
@@ -146,6 +148,9 @@ for id_name in ID_lst:
             re_publish.append(line)
         else:
             first_publish.append(line)
+    if first_publish == []:
+        print('%s program shows on daily time' % id_name)
+        continue
 #重播找首播
     result_lst = []
     for line in re_publish:
@@ -158,4 +163,5 @@ for id_name in ID_lst:
         result_lst.append(line)
     for line in first_publish:
         result_lst.append(line)
-    meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/result.csv')
+    meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/'+id_name+'.csv')
+    print(id_name)
