@@ -164,4 +164,3 @@ for id_name in ID_lst:
     for line in first_publish:
         result_lst.append(line)
     meta.lst_to_csv(result_lst, 'D:/Big_Data/time_shift/test_data/'+id_name+'.csv')
-    print(id_name)
