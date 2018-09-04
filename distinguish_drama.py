@@ -79,15 +79,7 @@ result_lst = []
 for line in re_publish:
     print(line['ps'])
     time_span = datetime.timedelta(50)
-    count = 0
     for first in first_publish:
-        try:
-            first['parent_id']
-            print(count)
-            return line
-        except:
-            pass
-        count+=1
         difference = line['start_datetime'] - first['start_datetime']
         if difference > datetime.timedelta(0) and difference < time_span:
             time_span = difference
@@ -95,6 +87,9 @@ for line in re_publish:
     result_lst.append(line)
 for line in first_publish:
     result_lst.append(line)
+for line in result_lst:
+    if line['ps'] == 1:
+        line['parent_id'] = None
 if len(first_publish) == 1:
     meta.lst_to_csv(result_lst, 'F:/time_shift/test_data/variety/onlyonefirst'+id_name+'.csv')
     write_log_into_txt.info('%s is only one first published' % id_name)
