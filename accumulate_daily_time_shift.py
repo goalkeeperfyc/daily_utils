@@ -9,7 +9,7 @@ import datetime
 from crawler_sys.utils import Metaorphosis as meta
 
 first_published_program_lst = []
-daily_program_lst = meta.csv_to_lst_whth_headline('F:/time_shift/test_data/variety/湖南卫视声临其境.csv')
+daily_program_lst = meta.csv_to_lst_whth_headline('F:/time_shift/test_data/special_program/浙江卫视最优的我们.csv')
 
 for line in daily_program_lst:
     try:
@@ -41,4 +41,11 @@ def accumulate_daily_time_shift(first_published_program_lst, daily_program_lst):
 
 if __name__ == '__main__':
     test_data = accumulate_daily_time_shift(first_published_program_lst, daily_program_lst)
+    time_shift_total = 0
+    duration_total = 0
+    for line in test_data:
+        time_shift_total += (line['time_shift_result']*int(line['duration']))
+        duration_total += int(line['duration'])
+    result = time_shift_total/duration_total
+    meta.lst_to_csv(test_data, 'F:/time_shift/test_data/special_program/浙江卫视最优的我们result.csv')
     
