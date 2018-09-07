@@ -47,7 +47,7 @@ def variety_program(csvname, output_path):
         test_dura = 1
     except:
         test_dura = 0
-        print("duration doesn't exist")
+        print("duration exists")
     #转化指标
     for line in data_lst:
         line['start'] = convert_csm_time_to_ISO(line['date'] + ' ' + line['start_time'])
@@ -106,26 +106,14 @@ def variety_program(csvname, output_path):
                 variety_distinguish.append(D0)
                 continue
 
-        df_process = pd.DataFrame(process_lst)
-        mean = df_process['rate'].mean()
+#        df_process = pd.DataFrame(process_lst)
+#        mean = df_process['rate'].mean()
         for line in process_lst:
-            if line['rate'] > mean:
-                line['ps1'] = 1
-                line['ps1_poss'] = (line['rate'] - mean)/mean
-            else:
-                line['ps1'] = 0
-                line['ps1_poss'] = 0
-            if line['start_hour'] >= 19 and line['start_hour'] <= 22:
-                line['ps2'] = 1
-            else:
-                line['ps2'] = 0
-    #将两个都是1的放入first_lst
-
-        for line in process_lst:
-            if line['ps1'] == 1 and line['ps2'] == 1:
+            if line['start_hour'] >= 11 and line['start_hour'] <= 13:
                 line['ps'] = 1
             else:
                 line['ps'] = 0
+    #将两个都是1的放入first_lst
 
     #保证一天只有一个首播
         date_lst = []
@@ -173,6 +161,6 @@ def variety_program(csvname, output_path):
             variety_distinguish.append(D0)
 
 if __name__ == '__main__':
-    variety_program(csvname='F:/time_shift/test_data/special_program/the_best_us.csv', 
-                    output_path='F:/time_shift/test_data/special_program')
+    variety_program(csvname='F:/time_shift/test_data/document/walk_into_science.csv', 
+                    output_path='F:/time_shift/test_data/document')
     
