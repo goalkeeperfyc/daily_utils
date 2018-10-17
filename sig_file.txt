@@ -1,0 +1,297 @@
+package com.yxcorp.retrofit.b;
+
+import android.text.TextUtils;
+import android.util.Pair;
+import com.yxcorp.retrofit.a.a;
+import com.yxcorp.retrofit.c.d;
+import com.yxcorp.retrofit.multipart.f;
+import com.yxcorp.utility.f.b;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import okhttp3.FormBody;
+import okhttp3.FormBody.a;
+import okhttp3.HttpUrl;
+import okhttp3.HttpUrl.Builder;
+import okhttp3.Request;
+import okhttp3.Request.a;
+import okhttp3.p;
+import okhttp3.q;
+import okhttp3.q.a;
+import okhttp3.s;
+import okhttp3.s.a;
+import okhttp3.s.b;
+import okhttp3.v;
+import okhttp3.w;
+import okio.ByteString;
+
+public final class c
+  implements q
+{
+  private final a.a a;
+  
+  public c(a.a parama)
+  {
+    this.a = parama;
+  }
+  
+  private static Map<String, String> a(Request paramRequest)
+    throws IOException
+  {
+    paramRequest = (s)paramRequest.body();
+    HashMap localHashMap = new HashMap();
+    int j = paramRequest.h.size();
+    int i = 0;
+    while (i < j)
+    {
+      s.b localb = (s.b)paramRequest.h.get(i);
+      if ((!(localb.b instanceof f)) && (localb.a != null))
+      {
+        String str = localb.a.a(localb.a.a(0));
+        str = str.substring(str.indexOf("name=\"") + 6, str.length() - 1);
+        okio.c localc = new okio.c();
+        byte[] arrayOfByte = new byte[(int)localb.b.contentLength()];
+        localb.b.writeTo(localc);
+        localc.a(arrayOfByte);
+        localHashMap.put(str, new String(arrayOfByte, Charset.forName("UTF-8")));
+        b.a(localc);
+      }
+      i += 1;
+    }
+    return localHashMap;
+  }
+  
+  private static HttpUrl a(HttpUrl paramHttpUrl, Map<String, String> paramMap)
+  {
+    if ((paramMap == null) || (paramMap.isEmpty())) {
+      return paramHttpUrl;
+    }
+    HttpUrl.Builder localBuilder = paramHttpUrl.j();
+    paramMap = paramMap.entrySet().iterator();
+    while (paramMap.hasNext())
+    {
+      Object localObject = (Map.Entry)paramMap.next();
+      if (paramHttpUrl.c((String)((Map.Entry)localObject).getKey()) == null)
+      {
+        localBuilder.a((String)((Map.Entry)localObject).getKey(), (String)((Map.Entry)localObject).getValue());
+      }
+      else
+      {
+        String str = (String)((Map.Entry)localObject).getKey();
+        localObject = (String)((Map.Entry)localObject).getValue();
+        if (str == null) {
+          throw new NullPointerException("name == null");
+        }
+        if (localBuilder.g != null) {
+          localBuilder.e(HttpUrl.a(str, " \"'<>#&=", false, false, true, true));
+        }
+        localBuilder.a(str, (String)localObject);
+      }
+    }
+    return localBuilder.b();
+  }
+  
+  private static void a(Request paramRequest, Map<String, String> paramMap)
+  {
+    paramRequest = (FormBody)paramRequest.body();
+    int j = paramRequest.size();
+    int i = 0;
+    while (i < j)
+    {
+      if (!paramMap.containsKey(paramRequest.name(i))) {
+        paramMap.put(paramRequest.name(i), paramRequest.value(i));
+      }
+      i += 1;
+    }
+  }
+  
+  public final w a(q.a parama)
+    throws IOException
+  {
+    int j = 0;
+    Request localRequest = parama.request();
+    Object localObject4 = localRequest.url();
+    if (((HttpUrl)localObject4).e == null) {}
+    Object localObject5;
+    Object localObject6;
+    Object localObject3;
+    boolean bool;
+    int i;
+    for (Object localObject2 = Collections.emptySet();; localObject2 = Collections.unmodifiableSet((Set)localObject1))
+    {
+      localObject5 = new HashMap();
+      localObject6 = new HashMap();
+      localObject3 = null;
+      bool = "GET".equalsIgnoreCase(localRequest.method());
+      if (!bool) {
+        break label531;
+      }
+      if ((localObject2 == null) || (((Set)localObject2).isEmpty())) {
+        break label1208;
+      }
+      localObject1 = ((Set)localObject2).iterator();
+      while (((Iterator)localObject1).hasNext())
+      {
+        localObject2 = (String)((Iterator)localObject1).next();
+        ((Map)localObject5).put(localObject2, ((HttpUrl)localObject4).c((String)localObject2));
+      }
+      localObject1 = new LinkedHashSet();
+      int k = ((HttpUrl)localObject4).e.size();
+      i = 0;
+      while (i < k)
+      {
+        ((Set)localObject1).add(((HttpUrl)localObject4).e.get(i));
+        i += 2;
+      }
+    }
+    Object localObject1 = null;
+    for (;;)
+    {
+      HashMap localHashMap = new HashMap((Map)localObject5);
+      a.a locala = this.a;
+      Map localMap = locala.b();
+      localMap.putAll((Map)localObject6);
+      localObject6 = locala.c();
+      localObject3 = (String)((Map)localObject5).remove("client_salt");
+      localObject2 = localObject3;
+      if (localObject3 == null) {
+        localObject2 = (String)localMap.remove("client_salt");
+      }
+      localObject3 = localObject2;
+      if (localObject2 == null) {
+        localObject3 = (String)((Map)localObject6).remove("client_salt");
+      }
+      if (bool) {
+        localMap.putAll((Map)localObject5);
+      }
+      for (;;)
+      {
+        com.yxcorp.retrofit.c.c.a(localMap, (Map)localObject6);
+        localObject2 = locala.a(localMap, (Map)localObject6);
+        ((Map)localObject6).put("sig", localObject2);
+        if (!TextUtils.isEmpty((CharSequence)localObject3)) {
+          ((Map)localObject6).put("__NStokensig", locala.a((String)localObject2, (String)localObject3));
+        }
+        if (bool)
+        {
+          localMap.putAll((Map)localObject6);
+          ((Map)localObject6).clear();
+        }
+        localObject3 = new Pair(localMap, localObject6);
+        localObject2 = a((HttpUrl)localObject4, (Map)((Pair)localObject3).first);
+        localObject4 = localRequest.headers();
+        localObject2 = new Request.a().a((HttpUrl)localObject2);
+        ((Request.a)localObject2).e = localRequest.tag();
+        if ((localObject4 == null) || (((p)localObject4).a.length / 2 <= 0)) {
+          break;
+        }
+        localObject5 = ((p)localObject4).a().iterator();
+        while (((Iterator)localObject5).hasNext())
+        {
+          localObject6 = (String)((Iterator)localObject5).next();
+          ((Request.a)localObject2).b((String)localObject6, ((p)localObject4).a((String)localObject6));
+        }
+        label531:
+        localObject1 = localObject3;
+        if (localRequest.body() != null)
+        {
+          if (!(localRequest.body() instanceof FormBody)) {
+            break label631;
+          }
+          a(localRequest, (Map)localObject5);
+          localObject1 = localObject3;
+        }
+        while ((localObject2 != null) && (!((Set)localObject2).isEmpty()))
+        {
+          localObject2 = ((Set)localObject2).iterator();
+          while (((Iterator)localObject2).hasNext())
+          {
+            localObject3 = (String)((Iterator)localObject2).next();
+            ((Map)localObject6).put(localObject3, ((HttpUrl)localObject4).c((String)localObject3));
+          }
+          label631:
+          localObject1 = localObject3;
+          if ((localRequest.body() instanceof s))
+          {
+            localObject1 = a(localRequest);
+            ((Map)localObject5).putAll((Map)localObject1);
+          }
+        }
+        ((Map)localObject6).putAll((Map)localObject5);
+      }
+      if (!bool) {
+        if ((localRequest.body() instanceof s))
+        {
+          localObject5 = (s)localRequest.body();
+          localObject4 = new s.a(((s)localRequest.body()).f.utf8());
+          ((s.a)localObject4).a(((s)localObject5).g);
+          localObject5 = new ArrayList(((s)localObject5).h).iterator();
+          while (((Iterator)localObject5).hasNext())
+          {
+            localObject6 = (s.b)((Iterator)localObject5).next();
+            ((s.a)localObject4).a(((s.b)localObject6).a, ((s.b)localObject6).b);
+          }
+          localObject3 = (Map)((Pair)localObject3).second;
+          if ((localObject3 != null) && (!((Map)localObject3).isEmpty()))
+          {
+            localObject3 = ((Map)localObject3).entrySet().iterator();
+            while (((Iterator)localObject3).hasNext())
+            {
+              localObject5 = (Map.Entry)((Iterator)localObject3).next();
+              if ((localObject1 == null) || (!((Map)localObject1).containsKey(((Map.Entry)localObject5).getKey()))) {
+                ((s.a)localObject4).a((String)((Map.Entry)localObject5).getKey(), (String)((Map.Entry)localObject5).getValue());
+              }
+            }
+          }
+          ((Request.a)localObject2).a(localRequest.method(), ((s.a)localObject4).a());
+        }
+      }
+      for (;;)
+      {
+        return parama.proceed(d.a(d.a(((Request.a)localObject2).a(), "origin_method", localRequest.method()), "origin_params", localHashMap));
+        localObject1 = new FormBody.a();
+        localObject3 = (Map)((Pair)localObject3).second;
+        if ((localRequest.body() instanceof FormBody))
+        {
+          localObject4 = (FormBody)localRequest.body();
+          i = j;
+          while (i < ((FormBody)localObject4).size())
+          {
+            localObject5 = ((FormBody)localObject4).name(i);
+            localObject6 = ((FormBody)localObject4).value(i);
+            if ((localObject3 != null) && (((Map)localObject3).containsKey(localObject5)) && (TextUtils.equals((CharSequence)localObject6, (CharSequence)((Map)localObject3).get(localObject5)))) {
+              ((Map)localObject3).remove(localObject5);
+            }
+            if (!"client_salt".equals(localObject5)) {
+              ((FormBody.a)localObject1).a((String)localObject5, (String)localObject6);
+            }
+            i += 1;
+          }
+        }
+        if (localObject3 != null)
+        {
+          localObject3 = ((Map)localObject3).entrySet().iterator();
+          while (((Iterator)localObject3).hasNext())
+          {
+            localObject4 = (Map.Entry)((Iterator)localObject3).next();
+            ((FormBody.a)localObject1).a((String)((Map.Entry)localObject4).getKey(), (String)((Map.Entry)localObject4).getValue());
+          }
+        }
+        ((Request.a)localObject2).a(localRequest.method(), ((FormBody.a)localObject1).a());
+        continue;
+        ((Request.a)localObject2).a(localRequest.method(), localRequest.body());
+      }
+      continue;
+      label1208:
+      localObject1 = null;
+    }
+  }
+}
