@@ -114,3 +114,17 @@ def csv_to_file(filename, csvname):
     dataframe = pd.DataFrame(task)
     dataframe.to_csv(csvname, encoding='gb18030', index=False)
     file.close()
+
+
+def lst_to_csv_del(lst_name, csv_name, *args):
+    dataframe=pd.DataFrame(lst_name)
+    if len(str(video_lst[0]['release_time'])) == 10:
+        dataframe['midstep'] = dataframe['release_time']+8*3600
+        dataframe['realtime'] = pd.to_datetime(dataframe['midstep'],unit='s')
+    else:
+        dataframe['midstep'] = dataframe['release_time']+8*3600*1e3
+        dataframe['realtime'] = pd.to_datetime(dataframe['midstep'],unit='ms')
+    del dataframe['midstep']
+    del dataframe['release_time']
+    del dataframe['fetch_time']
+    dataframe.to_csv(csvname, encoding='gb18030', index=False)
